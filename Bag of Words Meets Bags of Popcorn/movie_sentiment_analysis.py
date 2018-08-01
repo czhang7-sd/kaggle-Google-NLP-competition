@@ -48,7 +48,7 @@ def tokenize_sentences(review):
     return cleaned_sentences
 
 
-def train_vector_model(dimension=300, num_word=40, num_workers=2, window_size=10, sampling=1e-3):
+def train_vector_model(sentence, dimension=300, num_word=40, num_workers=2, window_size=10, sampling=1e-3):
     """
     input: parameters to train vector model
         dimension: Word vector dimensionality
@@ -59,7 +59,7 @@ def train_vector_model(dimension=300, num_word=40, num_workers=2, window_size=10
     """
     model_name = '{}dimension_{}minwords_{}window_size.model'.format(dimension, num_word, window_size)
     print('Training model...')
-    model = Word2Vec(sentences, workers=num_workers, size=dimension, min_count=num_word,
+    model = Word2Vec(sentence, workers=num_workers, size=dimension, min_count=num_word,
                      window=window_size, sample=sampling)
 
     try:
@@ -109,7 +109,8 @@ if __name__ == "__main__":
     print('Cleaning the reviews...')
     sentences = sum(unlabeled_train_data.review.apply(tokenize_sentences), [])
     print('Cleaning is done...')
-    train_vector_model()
+    train_vector_model(sentences)
+    print('Model has been trained...')
 
     # use labeled_train_data to train random forest model and test on validation dataset
     labeled_train_data = load_dataset('labeled_train_data')
